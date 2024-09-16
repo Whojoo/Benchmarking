@@ -1,6 +1,7 @@
 using Benchy.DapperVsEfCore.Database.Repositories;
 using Benchy.DapperVsEfCore.Models;
 using FastEndpoints;
+using FluentValidation;
 
 namespace Web.Endpoints;
 
@@ -11,7 +12,7 @@ public class ListCompleteVehiclesEfCore(EfCoreDIRepository repository)
 
     public record Response(int TotalCount, List<Vehicle> Vehicles);
 
-    public record Request(int? Page, int? PageSize);
+    public record Request(int Page = 1, int PageSize = 10);
 
     public override void Configure()
     {
@@ -21,9 +22,19 @@ public class ListCompleteVehiclesEfCore(EfCoreDIRepository repository)
 
     public override async Task HandleAsync(Request req, CancellationToken ct)
     {
-        var page = req.Page ?? 1;
-        var pageSize = req.PageSize ?? 10;
-        var vehicles = await _repository.GetCompleteVehiclesAsync(page, pageSize);
+        var vehicles = await _repository.GetCompleteVehiclesAsync(req.Page, req.PageSize);
         await SendAsync(new Response(vehicles.Total, vehicles.Vehicles), cancellation: ct);
+    }
+
+    public class Validator : Validator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Page)
+                .GreaterThanOrEqualTo(1);
+
+            RuleFor(x => x.PageSize)
+                .GreaterThanOrEqualTo(1);
+        }
     }
 }

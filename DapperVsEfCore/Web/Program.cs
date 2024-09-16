@@ -1,6 +1,7 @@
 using Benchy.DapperVsEfCore.Database;
 using Benchy.DapperVsEfCore.Database.Repositories;
 using FastEndpoints;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddFastEndpoints();
+
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 builder.Services.AddDbContextPool<VehicleDbContext>(options =>
 {
