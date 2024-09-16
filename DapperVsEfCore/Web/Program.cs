@@ -14,7 +14,7 @@ builder.Services.AddFastEndpoints();
 
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 
-builder.Services.AddDbContextPool<VehicleDbContext>(options =>
+builder.Services.AddDbContext<VehicleDbContext>(options =>
 {
     options.UseSqlServer(DataSchemaConstants.ConnectionString);
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
