@@ -5,8 +5,8 @@ namespace Benchy.DapperVsEfCore.Database.Factories;
 
 public static class ConnectionFactory
 {
-    public static IDbConnection Create()
+    public static IDbConnection Create(string connectionString)
     {
-        return new SqlConnection(DataSchemaConstants.ConnectionString);
+        return new SqlConnection(connectionString);
     }
 }

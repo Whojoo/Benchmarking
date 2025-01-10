@@ -3,6 +3,7 @@ using Benchy.DapperVsEfCore.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Benchy.DapperVsEfCore.Database.Migrations
 {
     [DbContext(typeof(VehicleDbContext))]
-    partial class VehicleDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241219201032_Foo")]
+    partial class Foo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -5,11 +5,13 @@ using Dapper;
 
 namespace Benchy.DapperVsEfCore.Database.Repositories;
 
-public class DapperRepository : IRepository
+public class DapperRepository(string? connectionString = null) : IRepository
 {
+    private readonly string _connectionString = connectionString ?? DataSchemaConstants.ConnectionString;
+
     public async Task<Vehicle?> GetSimpleVehicleByIdAsync(long vehicleId)
     {
-        using var connection = ConnectionFactory.Create();
+        using var connection = ConnectionFactory.Create(_connectionString);
         return await connection.QueryFirstOrDefaultAsync<Vehicle>(
             DapperQueries.GetSimpleById,
             new { VehicleId = vehicleId });
@@ -17,7 +19,7 @@ public class DapperRepository : IRepository
 
     public async Task<Vehicle?> GetCompleteVehicleByIdAsync(long vehicleId)
     {
-        using var connection = ConnectionFactory.Create();
+        using var connection = ConnectionFactory.Create(_connectionString);
 
         await using var multiRead = await connection.QueryMultipleAsync(
             DapperQueries.GetCompleteById,
@@ -42,7 +44,7 @@ public class DapperRepository : IRepository
 
     public async Task<VehiclesResult> GetSimpleVehiclesAsync(int page, int pageSize)
     {
-        using var connection = ConnectionFactory.Create();
+        using var connection = ConnectionFactory.Create(_connectionString);
 
         await using var multiRead = await connection.QueryMultipleAsync(
             DapperQueries.GetSimpleVehicles,
@@ -56,7 +58,7 @@ public class DapperRepository : IRepository
 
     public async Task<VehiclesResult> GetCompleteVehiclesAsync(int page, int pageSize)
     {
-        using var connection = ConnectionFactory.Create();
+        using var connection = ConnectionFactory.Create(_connectionString);
 
         await using var multiRead = await connection.QueryMultipleAsync(
             DapperQueries.GetCompleteVehicles,

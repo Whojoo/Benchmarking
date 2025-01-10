@@ -8,5 +8,5 @@ export const options = {
 };
 
 export default function() {
-  http.get('http://localhost:5029/ef/vehicles?page=3&pageSize=30');
+  http.get('http://localhost:8080/dapper/vehicles/simple?page=0&pageSize=30');
 }

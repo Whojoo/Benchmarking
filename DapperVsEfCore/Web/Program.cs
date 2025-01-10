@@ -1,3 +1,4 @@
+using Benchy.DapperVsEfCore;
 using Benchy.DapperVsEfCore.Database;
 using Benchy.DapperVsEfCore.Database.Repositories;
 using FastEndpoints;
@@ -16,12 +17,16 @@ ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 builder.Services.AddDbContext<VehicleDbContext>(options =>
 {
-    options.UseSqlServer(DataSchemaConstants.ConnectionString);
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Vehicle"));
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
 builder.Services.AddScoped<EfCoreDIRepository>();
-builder.Services.AddScoped<DapperRepository>();
+builder.Services.AddScoped<DapperRepository>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    return new DapperRepository(config.GetConnectionString("Vehicle"));
+});
 
 var app = builder.Build();
 
@@ -31,6 +36,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapPost("/api/seeder", async (VehicleDbContext vehicleDbContext) =>
+{
+    await DbSeeder.SeedAsync(vehicleDbContext);
+    return Results.Ok();
+});
 
 app.UseHttpsRedirection();
 

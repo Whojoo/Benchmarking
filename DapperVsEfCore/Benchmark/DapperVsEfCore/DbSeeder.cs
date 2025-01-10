@@ -12,4 +12,12 @@ public static class DbSeeder
         vehicleDbContext.AddRange(vehiclesToAdd);
         await vehicleDbContext.SaveChangesAsync();
     }
+    
+    
+    public static async Task SeedAsync(VehicleDbContext vehicleDbContext)
+    {
+        var vehiclesToAdd = DataFactory.GenerateVehicles();
+        vehicleDbContext.AddRange(vehiclesToAdd);
+        await vehicleDbContext.SaveChangesAsync();
+    }
 }
