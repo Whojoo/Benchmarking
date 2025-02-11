@@ -3,5 +3,6 @@
 using BenchmarkDotNet.Running;
 using GeneralBenchmarks;
 using GeneralBenchmarks.Benchmarks;
+using GeneralBenchmarks.FluentValidationBenchmark;
 
-BenchmarkRunner.Run<MapJsonOrExtensionBenchmarks>();
+BenchmarkRunner.Run<FluentValidationBenchmark>();
