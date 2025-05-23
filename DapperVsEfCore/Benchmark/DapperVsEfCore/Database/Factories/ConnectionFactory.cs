@@ -5,8 +5,10 @@ namespace Benchy.DapperVsEfCore.Database.Factories;
 
 public static class ConnectionFactory
 {
-    public static IDbConnection Create(string connectionString)
+    public static async Task<IDbConnection> Create(string connectionString)
     {
-        return new SqlConnection(connectionString);
+        var connection =  new SqlConnection(connectionString);
+        await connection.OpenAsync();
+        return connection;
     }
 }

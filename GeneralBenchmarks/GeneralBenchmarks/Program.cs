@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
-using GeneralBenchmarks;
-using GeneralBenchmarks.Benchmarks;
-using GeneralBenchmarks.FluentValidationBenchmark;
+using GeneralBenchmarks.MediatRClone;
 
-BenchmarkRunner.Run<FluentValidationBenchmark>();
+BenchmarkRunner.Run<MediatRAlternativeBenchmark>();
+// BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, new DebugInProcessConfig());
