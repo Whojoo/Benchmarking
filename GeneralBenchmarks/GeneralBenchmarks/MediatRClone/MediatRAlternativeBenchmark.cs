@@ -11,6 +11,7 @@ public class MediatRAlternativeBenchmark
 {
     private IServiceProvider _handlerProvider = null!;
     private IServiceProvider _pipelineProvider = null!;
+    private IServiceProvider _templateProvider = null!;
     
     [GlobalSetup]
     public void Setup()
@@ -41,12 +42,22 @@ public class MediatRAlternativeBenchmark
             .AddSingleton(typeof(IRequestPipeline<,>), typeof(LogRequestPipeline<,>))
             .AddScoped(typeof(RequestExecutor<,>))
             .BuildServiceProvider();
+        
+        _templateProvider = new ServiceCollection()
+            .AddSingleton<MockLogger>()
+            .AddSingleton<IValidator<IntRequest>, MockValidator>()
+            .AddScoped<IMapper<IntRequest>, MockMapper>()
+            .AddScoped<IRequestHandler<IntRequest, int>, TemplateIntRequestHandler>()
+            .BuildServiceProvider();
 
         using var handlerScope = _handlerProvider.CreateScope();
         _ = handlerScope.ServiceProvider.GetRequiredService<IRequestHandler<IntRequest, int>>();
         
         using var pipelineScope = _pipelineProvider.CreateScope();
         _ = pipelineScope.ServiceProvider.GetRequiredService<RequestExecutor<IntRequest, int>>();
+        
+        using var templateScope = _templateProvider.CreateScope();
+        _ = templateScope.ServiceProvider.GetRequiredService<IRequestHandler<IntRequest, int>>();
     }
 
     [Benchmark]
@@ -65,5 +76,14 @@ public class MediatRAlternativeBenchmark
         var executor = scope.ServiceProvider.GetRequiredService<RequestExecutor<IntRequest, int>>();
         var request = new IntRequest(1);
         return await executor.ExecuteAsync(request);
+    }
+    
+    [Benchmark]
+    public async Task<int> TemplateMethod()
+    {
+        await using var scope = _handlerProvider.CreateAsyncScope();
+        var handler = scope.ServiceProvider.GetRequiredService<IRequestHandler<IntRequest, int>>();
+        var request = new IntRequest(1);
+        return await handler.HandleAsync(request);
     }
 }
