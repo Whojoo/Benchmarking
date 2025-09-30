@@ -7,7 +7,7 @@ public static class ConnectionFactory
 {
     public static async Task<IDbConnection> Create(string connectionString)
     {
-        var connection =  new SqlConnection(connectionString);
+        var connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
         return connection;
     }
