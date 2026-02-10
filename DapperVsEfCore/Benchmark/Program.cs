@@ -1,7 +1,9 @@
 ﻿using BenchmarkDotNet.Running;
 using Benchy.DapperVsEfCore;
 
-BenchmarkRunner.Run<DapperVsEfCoreBenchmark>();
+// BenchmarkRunner.Run<EfCoreAsyncEnumerableTest>();
+BenchmarkRunner.Run<DapperGridReaderBenchmark>();
+// BenchmarkRunner.Run<DapperVsEfCoreBenchmark>();
 
 // await DbSeeder.SeedAsync();
 
